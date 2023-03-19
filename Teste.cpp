@@ -31,7 +31,7 @@ void TEST(int K, int P, const int NrRuns){
 
                 auto start = high_resolution_clock::now();
 
-                sortVector(v);
+                algsort(v);
 
                 auto stop = high_resolution_clock::now();
 
@@ -72,7 +72,7 @@ void TEST(int K, int P, const int NrRuns){
 
     try {
         std::cout << "Devious acts are in motion...\n";
-        mergesort(v, 0, n-1, temp);
+        algsort();
         std::cout << "The sort is done.\n";
     } catch (const std::exception& e) {
         std::cout << "Dios mio: " << e.what() << "\n";
