@@ -64,13 +64,13 @@ void TEST(int K, int P, const int NrRuns){
   int n = 1000000000;
     std::vector<int> v(n, 1);
 
-    // genereaza un index random
+    // Generates a random index
     std::random_device rd;
     std::mt19937 gen(rd());
     std::uniform_int_distribution<> dis(0, n-1);
     int index = dis(gen);
 
-    // seteaza valuarea de la index la 0
+    // Sets the value at index with 0
     v[index] = 0;
 
      Sort the vector using mergesort
