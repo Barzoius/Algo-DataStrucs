@@ -6,6 +6,10 @@
 
 using namespace std::chrono;
 
+//This will randomly create vector of diferent sizes 10 to 10^K 
+//with different maximum sizes from 10 to 10^P.
+//For every combination of vector size and max value
+//it will generate 10 different vectors and print the average run time
 
 void TEST(int K, int P, const int NrRuns){
 
