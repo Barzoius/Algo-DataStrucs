@@ -1,4 +1,4 @@
 # Tema-SD
 RadixSort/MergeSort/ShellSort/PigeonholeSort/SimpleSort.
 
-In Teste.cpp sunt codurile pe care le-am folosit sa generez diferite teste pentru algoritmi.
+In Tests.cpp are the codes used to generate different tests for the sorting algorithms.
