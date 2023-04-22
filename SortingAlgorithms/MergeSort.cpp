@@ -59,6 +59,13 @@ void mergesort(std::vector<int>& v, int l, int r, std::vector<int>& temp){
 //     mergesort(v, 0, n-1, temp);
 // }
 
+// void printVector(std::vector<int>& vec) {
+//     for (int i = 0; i < vec.size(); i++) {
+//         std::cout << vec[i] << " ";
+//     }
+//     std::cout << std::endl;
+// }
+
 // int main()
 // {
 //     STANDARDsort(...)    
