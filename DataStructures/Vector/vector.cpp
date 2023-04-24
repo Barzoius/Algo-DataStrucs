@@ -72,6 +72,25 @@ public:
         return vector[index];
 
     }
+    
+    void REZERVE(int new_size)
+    {
+        if(new_size <= Size)
+        {
+            return;
+        }
+
+        T* aux = new T[new_size];
+        for(int i = 0; i < Size; i++)
+        {
+            aux[i] = vector[i];
+        }
+
+        delete[] vector;
+
+        vector = aux;
+        Size = new_size;
+    }
 
 };
 
