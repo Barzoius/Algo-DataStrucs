@@ -1,4 +1,4 @@
-Implemented operations:
+IMPLEMENTED OPERATIONS:
 
 -INSERT = inserts an element
 
