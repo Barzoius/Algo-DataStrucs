@@ -7,7 +7,7 @@ int main()
 {
     int k;
     std::cin>>k;
-    int size =(k*(k+1))/2; //The size is this way because it equal to the sum of k elements
+    int size =(k*(k+1))/2; //The size is this way because it is equal to the sum of k elements
     int v[size];
     int index = 0;
 
