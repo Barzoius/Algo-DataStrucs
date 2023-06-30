@@ -12,3 +12,5 @@ public:
      left_first(nullptr),
      right_second(nullptr){}
 };
+
+int mian(){}
