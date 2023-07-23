@@ -7,7 +7,7 @@
 #         321   123 
 #         21     12 
 #         1       1 
-#It doesnt look as good for m > 11
+#It doesnt look as good for m > 11.
 #----------------------------------#
 
 
