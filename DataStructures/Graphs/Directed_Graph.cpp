@@ -344,6 +344,56 @@ public:
     }
 
 
+///-----886.Possible_Bipartition-----///
+
+    bool possibleBipartition(int n, std::vector<std::vector<int>>& dislikes) {
+
+        num_vertices = n;
+        std::vector<std::vector<int>> adjacency_List;
+        adjacency_List.resize(num_vertices);
+
+        for (const auto& edge : dislikes) {
+            int u = edge[0];
+            int v = edge[1];
+            adjacency_List[u].push_back(v);
+            adjacency_List[v].push_back(u); // For undirected graph
+        }
+
+        std::vector<int> color(num_vertices, -1);
+
+        for (size_t i = 0; i < num_vertices; i++)
+        {
+            if (color[i] == -1)
+            {
+                std::queue<int> QUEUE;
+                QUEUE.push(i);
+                color[i] = 0;
+
+                while (!QUEUE.empty())
+                {
+                    int vertex = QUEUE.front();
+                    QUEUE.pop();
+
+                    for (int j : adjacency_List[vertex])
+                    {
+                        if (color[j] == color[vertex])
+                            return false;
+
+                        if (color[j] == -1)
+                        {
+                            color[j] = 1 - color[vertex];
+                            QUEUE.push(j);
+                        }
+                    }
+                }
+            }
+        }
+
+        return true;
+
+    }
+
+
 };
 
 
