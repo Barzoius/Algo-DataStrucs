@@ -1,8 +1,9 @@
-#include <io.h>
 #include <vector>
 #include <tuple>
 #include <iostream>
 #include <algorithm>
+#include <queue>
+#include <stack>
 
 class Implementations{
 public:
@@ -11,8 +12,6 @@ public:
 
     virtual ~Implementations() = default;
 };
-
-class iterator;
 
 class Graph : public virtual Implementations{
 
@@ -23,15 +22,33 @@ private:
     std::vector<std::tuple<int, int>> Edges_List;
 
     std::vector<bool> VIS;
+    std::vector<int> INT_VIS;
+    std::vector<bool> BOOL_VIS;
+
+
+    std::queue<std::pair<int, int>> QUEUE_1;
+
+
+    ///---Used for the Tarjan's Algorithm---///
+    std::vector<int> height = std::vector<int>(num_vertices);
+    std::vector<int> min_height = std::vector<int>(num_vertices);
+    ///------------------------------------///
+
+
+    std::vector<int> safe_nodes;
+    std::vector<int> unsafe_nodes;
+
 
 public:
+
     std::vector<bool> GetVis() const { return VIS; }
     Graph() : num_vertices(0) {}
 
     explicit Graph(size_t vertices_number ) : num_vertices(vertices_number)
     {
-        Adjacency_List.resize(vertices_number);
-        VIS.resize(vertices_number, false);
+        Adjacency_List.resize(num_vertices);
+        VIS.resize(num_vertices, false);
+        INT_VIS.resize(num_vertices, -1);
     }
 
     std::vector<std::vector<int>> Get_Adjacency_List(){ return Adjacency_List;}
@@ -58,7 +75,7 @@ public:
     void PrintAdjList(){
 
         for(size_t i = 0; i < Adjacency_List.size(); i++){
-            std::cout<<i+1<<": "<<"[";
+            std::cout<<i<<": "<<"[";
             for(size_t j = 0; j < Adjacency_List[i].size() ; j++){
                 std::cout << Adjacency_List[i][j];
                 if (j < Adjacency_List[i].size() - 1) {
@@ -82,21 +99,21 @@ public:
         }
     }
 
+///---------------------------DFS_BASED_THINGS---------------------------///
 
     void DFS(int start_vertex, bool flag)
     {
-        start_vertex--;
         VIS[start_vertex] = true;
 
-        if(flag) std::cout << start_vertex + 1 << " ";
+        if(flag) std::cout << start_vertex  << " ";
 
 
         for(const auto&  j : Adjacency_List[start_vertex])
         {
-            int adj_vertex = j - 1;
+            int adj_vertex = j ;
 
             if(!VIS[adj_vertex])
-                DFS(j, flag);
+                DFS(adj_vertex, flag);
 
         }
     }
@@ -107,9 +124,8 @@ public:
         std::cout<<"The DFS traversal is: ";
         for (int i = 0; i < Get_Graph_Size(); i++)
             if (!GetVis()[i])
-                DFS(i + 1, true);
+                DFS(i, true);
     }
-
 
     int GetConexElemets()
     {
@@ -129,32 +145,169 @@ public:
 
         return cnt;
     }
+
+
+///---------------------------BFS_BASED_THINGS---------------------------///
+
+    void BFS(int start_vertex)
+    {
+
+        std::cout<<"The BFS traversal is: ";
+        std::fill(VIS.begin(), VIS.end(), false);
+
+        std::queue<int> QUEUE;
+
+        VIS[start_vertex] = true;
+        QUEUE.push(start_vertex);
+
+        while(!QUEUE.empty())
+        {
+            int vertex = QUEUE.front();
+            std::cout<<vertex <<" ";
+
+            QUEUE.pop();
+
+            for (int j : Adjacency_List[vertex]) {
+                if (!VIS[j])
+                {
+                    VIS[j] = true;
+                    QUEUE.push(j);
+                }
+            }
+        }
+
+    }
+
+    bool Is_Bipartit()
+    {
+        std::vector<int> color(num_vertices, -1);
+
+        for (size_t i = 0; i < num_vertices; i++)
+        {
+            if (color[i] == -1)
+            {
+                std::queue<int> QUEUE;
+                QUEUE.push(i);
+                color[i] = 0;
+
+                while (!QUEUE.empty())
+                {
+                    int vertex = QUEUE.front();
+                    QUEUE.pop();
+
+                    for (int j : Adjacency_List[vertex])
+                    {
+                        if (color[j] == color[vertex])
+                            return false;
+
+                        if (color[j] == -1)
+                        {
+                            color[j] = 1 - color[vertex];
+                            QUEUE.push(j);
+                        }
+                    }
+                }
+            }
+        }
+
+        return true;
+    }
+
 };
 
 
 int main() {
 
-    Graph g(7);
-    std::vector<int> vec1 = {2};
-    std::vector<int> vec2 = {1, 6, 7};
-    std::vector<int> vec3 = {};
-    std::vector<int> vec4 = {5};
-    std::vector<int> vec5 = {4};
-    std::vector<int> vec6 = {2};
-    std::vector<int> vec7 = {2};
+
+    Graph g(4);
+    std::vector<std::vector<int>> ff = {{1, 0}, {2, 0}, {3, 1}, {3, 2}};
+    std::vector<std::vector<int>> gg = {{1, 0}, {0, 1}};
+//    g.findOrder(2, gg);
+//    std::vector<std::vector<int>> vv = {{1, 2}, {0, 2, 3}, {0, 1}, {1}};
+
+    std::vector<int> vec1 = {1, 2};
+    std::vector<int> vec2 = {0, 2, 3};
+    std::vector<int> vec3 = {0, 1};
+    std::vector<int> vec4 = {1};
 
     g.Add_to_adj_list(vec1, 0);
     g.Add_to_adj_list(vec2, 1);
     g.Add_to_adj_list(vec3, 2);
     g.Add_to_adj_list(vec4, 3);
-    g.Add_to_adj_list(vec5, 4);
-    g.Add_to_adj_list(vec6, 5);
-    g.Add_to_adj_list(vec7, 6);
-    g.PrintAdjList();
+////    g.PrintAdjList();
+//
+//    std::vector<std::vector<int>> grid ={{0,1,0,0,0},
+//                                         {0,1,0,1,1},
+//                                         {0,0,0,0,1},
+//                                         {0,0,0,0,0},
+//                                         {0,0,0,0,0}};
+//    int res = g.shortestBridge(grid);
+//    std::cout<<res;
+//
+////    int adj_index = 'o' - 'a' + 1;
+////    std::cout<<"let::" <<adj_index;
+//    std::cout<<std::endl;
+//    std::vector<std::string> ecuatii = {{"a==b"}, {"b!=c"}, {"c==a"}};
+//    if(g.equationsPossible(ecuatii)) {
+//        std::cout<<"TRUE";
+//    }
+//    else{
+//        std::cout<<"FALSE";
+//    }
+//
+//    std::cout<<std::endl;
+//    std::vector<std::vector<int>> graph = {{1, 2}, {2, 3}, {5}, {0}, {5}, {}, {}};
+//    std::vector<int> rezultat = g.eventualSafeNodes(graph);
+//
+//    for(int i : rezultat)
+//    {
+//        std::cout<<i<<" ";
+//    }
 
-    g.PrintDFS();
-    g.GetConexElemets();
+//    g.Equations(ecuatii);
+
+
+    std::vector<std::vector<int>> res;
+//
+//    g.DF(0, -1, 0, res);
+//
     std::cout<<std::endl;
+    std::vector<std::vector<int>> new_res = g.DF(0, -1, 0, res);
+//
+//    for(auto i : new_res){
+//        std::cout<<i[0]<<"-"<<i[1]<<std::endl;
+//    }
+
+
+
+
+//    std::vector<std::vector<int>> edges = {{1, 2}, {1, 3}, {2, 3}};
+//    bool ss = g.possibleBipartition(4, edges);
+//
+//    if(ss){
+//        std::cout<<"YES for leetcode";
+//    }
+//    else
+//    {
+//        std::cout<<"NO for leetcode";
+//    }
+//
+//    std::cout<<std::endl;
+//
+//    bool a = g.Is_Bipartit();
+//    if(a){
+//        std::cout<<"YES";
+//    }
+//    else
+//    {
+//        std::cout<<"NO";
+//    }
+
+//    g.PrintDFS();
+//    g.GetConexElemets();
+//    std::cout<<std::endl;
+//    g.BFS(4);
+
 
 
     return 0;
