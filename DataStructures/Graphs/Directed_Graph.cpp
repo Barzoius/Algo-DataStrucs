@@ -213,6 +213,54 @@ public:
         return true;
     }
 
+
+///---------------------------LEET_CODE_PROBLEMS---------------------------///
+
+///-----1192.Critical_Connections_in_a_Network-----///
+         ///-----Tarjan's Algorithm-----///
+
+//    std::vector<int> height = std::vector<int>(num_vertices);
+//    std::vector<int> min_height = std::vector<int>(num_vertices);
+
+    std::vector<std::vector<int>> DF(int start_vertex, int father, int Cnt,
+                                     std::vector<std::vector<int>>& res)
+    {
+
+        int cnt = Cnt;
+
+        height[start_vertex] = cnt;
+        min_height[start_vertex] = height[start_vertex];
+
+        cnt++;
+
+        VIS[start_vertex] = true;
+
+        for(const auto&  adj_vertex : Adjacency_List[start_vertex])
+        {
+            if(adj_vertex == father) continue;
+
+            if(!VIS[adj_vertex])
+            {
+                DF(adj_vertex, start_vertex, cnt, res);
+
+                min_height[start_vertex] = std::min(min_height[start_vertex], min_height[adj_vertex]);
+
+                if(min_height[adj_vertex] > height[start_vertex])
+                {
+                    res.push_back({adj_vertex, start_vertex});
+                    std::cout<<"["<<start_vertex<<", "<<adj_vertex<<"]"<<std::endl;
+                }
+            }
+            else    //cycle
+            {
+                min_height[start_vertex] = std::min(min_height[start_vertex], height[adj_vertex]);
+            }
+
+        }
+
+        return  res;
+    }
+
 };
 
 
