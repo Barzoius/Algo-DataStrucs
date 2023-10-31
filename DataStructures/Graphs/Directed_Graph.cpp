@@ -393,6 +393,68 @@ public:
 
     }
 
+///-----990.Satisfiability_of_Equality_Equations-----///
+
+    bool equationsPossible(std::vector<std::string>& equations) {
+        std::vector<std::vector<int>> adjacency_List(26);
+
+        for (std::string& equation : equations) {
+            if (equation[1] == '=') {
+                int adj_index = equation[0] - 'a';
+                int adj_vertex = equation[3] - 'a';
+
+                if (adj_index == adj_vertex) {
+                    continue; // Skip a == a equations
+                }
+
+                adjacency_List[adj_index].push_back(adj_vertex);
+                adjacency_List[adj_vertex].push_back(adj_index);
+            }
+        }
+
+        std::vector<int> visited(26, -1);
+
+        int component = 0; // Component identifier
+
+        for (int i = 0; i < 26; i++) {
+            if (visited[i] == -1) {
+                std::stack<int> stack;
+                stack.push(i);
+                visited[i] = component; // Assign the current component
+                while (!stack.empty()) {
+                    int node = stack.top();
+                    stack.pop();
+                    for (int neighbor : adjacency_List[node]) {
+                        if (visited[neighbor] == -1) {
+                            stack.push(neighbor);
+                            visited[neighbor] = component;
+                        }
+                    }
+                }
+                component++;
+            }
+//            std::cout<<std::endl;
+//            std::cout<<component;
+        }
+
+        for (std::string& equation : equations) {
+            if (equation[1] == '!') {
+                int adj_index = equation[0] - 'a';
+                int adj_vertex = equation[3] - 'a';
+
+                if(adj_index == adj_vertex) return false; // Exit on a!=a equations
+
+                if (visited[adj_index] != visited[adj_vertex]) { //check if they connect somewhere
+                    continue;
+                } else {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
 
 };
 
