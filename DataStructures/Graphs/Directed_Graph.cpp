@@ -505,6 +505,91 @@ public:
     }
 
 
+///-----210.Course_Schedule_II-----///
+    ///---Topological_Sort---///
+
+    void TopoDFS(int vertex, std::vector<int>& VISI, std::stack<int>& Stack)
+    {
+        VISI[vertex] = 1;
+
+        for(const auto& j : Adjacency_List[vertex])
+        {
+            int adj_vertex = j ;
+
+            if (VISI[adj_vertex] == 1)
+            {
+                //Cycle
+                Stack = std::stack<int>();
+                return;
+            }
+            else if (VISI[adj_vertex] == 0)
+            {
+                TopoDFS(adj_vertex, VISI, Stack);
+            }
+        }
+
+        VISI[vertex] = 2;
+        Stack.push(vertex);
+    }
+
+    std::vector<int> TopoSort(std::vector<int>& VISI )
+    {
+
+        std::vector<int> res = {};
+        std::stack<int> Stack;
+
+        for(int i = 0 ; i < VISI.size(); i++)
+        {
+            if (VISI[i] == 0)
+            {
+                TopoDFS(i, VISI, Stack);
+                if (Stack.empty())
+                {
+                    // Cycle detected, return an empty vector
+                    return {};
+                }
+            }
+        }
+
+        if (Stack.size() < VISI.size())
+        {
+            return {};
+        }
+
+        while(!Stack.empty())
+        {
+
+            res.emplace_back(Stack.top());
+            std::cout<<Stack.top()<<" ";
+            Stack.pop();
+        }
+
+        return res;
+
+    }
+
+    std::vector<int> findOrder(int numCourses, std::vector<std::vector<int>>& prerequisites)
+    {
+            // prerequisites = {{a <- b}, {c <- b}}
+        std::vector<int> VISI;
+        VISI.resize(numCourses);
+
+        for(const auto& edge : prerequisites)
+        {
+            int post_course = edge[0];
+            int pre_course = edge[1];
+
+            Adjacency_List[pre_course].emplace_back(post_course);
+        }
+
+        std::vector<int> RES;
+        RES = TopoSort(VISI);
+
+        return RES;
+
+    }
+
+
 
 };
 
