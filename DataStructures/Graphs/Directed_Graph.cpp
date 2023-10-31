@@ -456,6 +456,56 @@ public:
     }
 
 
+///-----802.Find_Eventual_Safe_States-----///
+
+//    std::vector<int> safe_nodes;  // all adj_vertex have to be safe
+//    std::vector<int> unsafe_nodes; // cycles the route
+
+    bool DFS(std::vector<std::vector<int>>& adj_list, int vertex, std::vector<int>& visited)
+    {
+
+        if(std::find(unsafe_nodes.begin(), unsafe_nodes.end(), vertex) != unsafe_nodes.end())
+            return false;
+        if(std::find(safe_nodes.begin(), safe_nodes.end(), vertex) != safe_nodes.end())
+            return true;
+
+        if(std::find(visited.begin(), visited.end(),vertex) != visited.end())
+        {
+            unsafe_nodes.emplace_back(vertex);
+            return false;
+        }
+
+        visited.emplace_back(vertex);
+
+        for(int adj_vertex : adj_list[vertex])
+        {
+            if(!DFS(adj_list, adj_vertex, visited))
+            {
+                unsafe_nodes.emplace_back(vertex);
+                return false;
+            }
+        }
+
+        safe_nodes.emplace_back(vertex);
+        return true;
+    }
+
+    std::vector<int> eventualSafeNodes(std::vector<std::vector<int>>& graph)
+    {
+        //Adjacency_List = graph;
+        std::vector<int> res , visited;
+
+        for(int i = 0; i < graph.size(); i++)
+        {
+            if(DFS(graph, i, visited))
+                res.emplace_back(i);
+        }
+
+        return res;
+    }
+
+
+
 };
 
 
