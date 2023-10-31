@@ -261,6 +261,89 @@ public:
         return  res;
     }
 
+
+///-----934.Shortest_Bridge-----///
+
+//    std::queue<std::pair<int, int>> QUEUE_1;
+    void Matrix_DFS(int xpos, int ypos, std::vector<std::vector<int>>& Matrix, int n = 0, int m = 0)
+    {
+
+        if(m == 0) m = n;
+        if(xpos < 0 || xpos >= n || ypos < 0 || ypos >= m) return;
+
+        if(Matrix[xpos][ypos] == 1)
+        {
+            Matrix[xpos][ypos] = 2;
+            QUEUE_1.push({xpos, ypos});
+
+            Matrix_DFS(xpos + 1, ypos, Matrix, n, m);
+            Matrix_DFS(xpos, ypos + 1, Matrix, n, m);
+            Matrix_DFS(xpos - 1, ypos, Matrix, n, m);
+            Matrix_DFS(xpos, ypos - 1, Matrix, n, m);
+        }
+    }
+
+    std::pair<int, int> TILE_SEARCH(int n, std::vector<std::vector<int>>& Map){
+        for (int i = 0; i < n; i++)
+            for(int j = 0; j < n; j++)
+                if (Map[i][j]==1){
+                    return {i, j};
+                }
+        return {-1,-1};
+    }
+
+    int shortestBridge(std::vector<std::vector<int>>& grid) {
+        int bridge = 0;
+        bool bridge_found = false;
+
+        int grid_size = (int)grid.size();
+        std::pair<int, int> Coords = TILE_SEARCH(grid_size, grid);
+
+
+        Matrix_DFS(Coords.first, Coords.second, grid, grid_size, grid_size);
+
+        while (!bridge_found) {
+            std::queue<std::pair<int, int>> QUEUE_2;
+
+            while (!QUEUE_1.empty() && !bridge_found) {
+                Coords = QUEUE_1.front();
+                QUEUE_1.pop();
+                int xpos = Coords.first;
+                int ypos = Coords.second;
+
+                std::vector<std::pair<int, int>> adj({ /// adjacent cells ///
+                                                             {xpos + 1, ypos}, /// >
+                                                             {xpos, ypos + 1}, /// ^
+                                                             {xpos - 1, ypos}, /// <
+                                                             {xpos, ypos - 1}}); /// v
+
+                for (auto &coords : adj) {
+                    if (coords.first < 0 ||
+                        coords.first >= grid_size ||
+                        coords.second < 0 ||
+                        coords.second >= grid_size)
+                        continue; //bad cell
+
+                    if (grid[coords.first][coords.second] == 1) {
+                        bridge_found = true;
+                        break;
+                    } else if (grid[coords.first][coords.second] == 0) {
+                        QUEUE_2.push({coords.first, coords.second});
+                        grid[coords.first][coords.second] = -1 - bridge;
+                    }
+                }
+            }
+
+            if (!bridge_found) {
+                QUEUE_1 = QUEUE_2;
+                bridge++;
+            }
+        }
+
+        return bridge;
+    }
+
+
 };
 
 
