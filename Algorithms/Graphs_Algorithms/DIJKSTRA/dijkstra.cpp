@@ -1,5 +1,8 @@
 #include <iostream>
-
+#include<vector>
+#include<queue>
+#include <tuple>
+#include <climits>
 
 class Graph{
 
@@ -79,6 +82,7 @@ public:
 
 int main()
 {
-
+  int n = 3;
+  Graph G(n);
   return 0;
 }
